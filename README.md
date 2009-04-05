@@ -11,7 +11,7 @@ a named AMQP fanout exchange, and a corresponding playback program
 uses an anonymous auto-delete queue to retrieve a stream from a named
 exchange.
 
-<img src="img/camstream-diagram.png" alt="Camstream network diagram"/>
+<img src="http://github.com/tonyg/camstream/raw/master/img/camstream-diagram.png" alt="Camstream network diagram"/>
 
 In this way, Camstream behaves similarly to a video-enabled
 [IRC](http://en.wikipedia.org/wiki/Internet_Relay_Chat), where an

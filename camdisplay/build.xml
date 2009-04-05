@@ -62,7 +62,7 @@
 	<include name="**/*.jnlp"/>
       </fileset>
       <filterset>
-	<filter token="BASEURL" value="${base.url}/camdisplay/"/>
+	<filter token="BASEURL" value="${base.url}"/>
       </filterset>
     </copy>
   </target>

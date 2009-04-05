@@ -3,24 +3,17 @@
 set -e
 
 variant=$1
-keystore=$2
 
 if [ -z "$variant" ]
 then
-  echo "Usage: package.sh <variant> <optional keystore location>"
+  echo "Usage: package.sh <variant>"
   exit 1
 fi
 
-base_url="-Dbase.url=http://stage.rabbitmq.com/examples/camstream"
+base_url="-Dbase.url=http://cloud.github.com/downloads/tonyg/camstream/"
 
-if [ -n "${keystore}" ]
-then
-  signing="-Dsigning.alias=rabbitmq -Dsigning.keystore=${keystore} -Dsigning.storepass=changeit"
-  dist_target=sign-dist
-else
-  signing=""
-  dist_target=dist
-fi
+signing="-Dsigning.alias=camstream-unofficial -Dsigning.keystore=`pwd`/camstream-unofficial.keystore -Dsigning.storepass=changeit"
+dist_target=sign-dist
 
 outputdir=packages/camstream
 mkdir -p $outputdir
@@ -50,3 +43,15 @@ esac
 
 build_package camcaptureJMF
 build_package camdisplay
+
+cd $outputdir
+mkdir flat
+mkdir flat/tmp
+cd flat/tmp
+for d in ../../camcaptureJMF.zip ../../camdisplay.zip
+do
+    unzip $d '*.jar' '*.jnlp' || true
+    mv */* ..
+done
+cd ..
+rm -rf tmp

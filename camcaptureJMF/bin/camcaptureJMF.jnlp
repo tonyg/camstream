@@ -11,7 +11,7 @@
     <j2se href="http://java.sun.com/products/autodl/j2se" version="1.5+"/>
     <jar href="camcapturejmf.jar"/>
     <jar href="commons-io-1.2.jar"/>
-    <jar href="rabbitmq-client.jar"/>
+    <jar href="rabbitmq-client-1.5.3.jar"/>
   </resources>
   <application-desc main-class="net.lshift.camcapture.jmf.Main"/>
 </jnlp>

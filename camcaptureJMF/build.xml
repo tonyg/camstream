@@ -64,7 +64,7 @@
 	<include name="**/*.jnlp"/>
       </fileset>
       <filterset>
-	<filter token="BASEURL" value="${base.url}/camcapturejmf/"/>
+	<filter token="BASEURL" value="${base.url}"/>
       </filterset>
     </copy>
     <exec dir="${dist.out}" executable="chmod">

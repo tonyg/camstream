@@ -1,2 +1,2 @@
-#!/bin/sh
+#!/bin/bash
 exec java -cp $(for d in *.jar; do echo -n "$d":; done) net.lshift.camdisplay.Main "$@"

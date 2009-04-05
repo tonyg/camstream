@@ -1,0 +1,4 @@
+#!/bin/bash
+cd `dirname $0`
+cp=.`find . -name '*.jar' -exec echo -n :{} \;`
+exec java -server -cp "$cp" net.lshift.camcapture.quicktime.Main dev.rabbitmq.com lfish "$(uname -n)" 5 160 120

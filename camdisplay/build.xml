@@ -65,6 +65,10 @@
 	<filter token="BASEURL" value="${base.url}"/>
       </filterset>
     </copy>
+    <exec dir="${dist.out}" executable="chmod">
+      <arg line="a+x"/>
+      <arg line="camdisplay"/>
+    </exec>
   </target>
 
   <target name="sign-dist" depends="dist">

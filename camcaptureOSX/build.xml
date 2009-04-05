@@ -62,6 +62,7 @@
     <exec dir="${dist.out}" executable="chmod">
       <arg line="a+x"/>
       <arg line="camcaptureOSX"/>
+      <arg line="camcaptureOSX-defaults"/>
     </exec>
   </target>
 

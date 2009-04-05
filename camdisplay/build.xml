@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<project default="build">
+  <property name="build.out" location="build"/>
+  <property name="lib.out" location="${build.out}/lib"/>
+  <property name="dist.out" location="${build.out}/dist"/>
+  <property name="javac.debug" value="true"/>
+  <property name="javac.source" value="1.5"/>
+  <property name="javac.target" value="1.5"/>
+  <property name="javac.out" location="${build.out}/classes"/>
+
+  <property name="rabbitmq.dist" value="../../AMQ/java/build/dist"/>
+
+  <path id="javac.classpath">
+    <fileset dir="${rabbitmq.dist}">
+      <include name="rabbitmq-client.jar"/>
+      <include name="commons-io-1.2.jar"/>
+    </fileset>
+  </path>
+
+  <path id="test.classpath">
+    <path refid="javac.classpath"/>
+    <pathelement path="${javac.out}"/>
+  </path>
+
+  <target name="build">
+    <mkdir dir="${javac.out}"/>
+    <javac destdir="${javac.out}" 
+	   classpathref="javac.classpath"
+	   source="${javac.source}"
+	   target="${javac.target}"
+	   debug="${javac.debug}">
+      <src path="src"/>
+      <src path="../camcapturecommon/src"/>
+    </javac>
+  </target>
+
+  <target name="jar" depends="build">
+    <mkdir dir="${lib.out}"/>
+    <jar destfile="${lib.out}/camdisplay.jar">
+      <fileset dir="${javac.out}"/>
+      <fileset dir=".." includes="resources/**"/>
+    </jar>
+  </target>
+
+  <target name="dist" depends="jar">
+    <mkdir dir="${dist.out}"/>
+    <copy todir="${dist.out}">
+      <fileset dir="${rabbitmq.dist}">
+        <include name="rabbitmq-client.jar"/>
+        <include name="commons-io-1.2.jar"/>
+      </fileset>
+      <fileset dir="${lib.out}">
+	<include name="**/*.jar"/>
+      </fileset>
+      <fileset dir="bin">
+	<exclude name="**/*.jnlp"/>
+      </fileset>
+      <fileset dir="../licenses" includes="*"/> 
+   </copy>
+    <copy todir="${dist.out}">
+      <fileset dir="bin">
+	<include name="**/*.jnlp"/>
+      </fileset>
+      <filterset>
+	<filter token="BASEURL" value="${base.url}/camdisplay/"/>
+      </filterset>
+    </copy>
+  </target>
+
+  <target name="sign-dist" depends="dist">
+    <signjar alias="${signing.alias}"
+	     storepass="${signing.storepass}"
+	     keystore="${signing.keystore}">
+      <fileset dir="${dist.out}">
+	<include name="**/*.jar"/>
+      </fileset>
+    </signjar>
+  </target>
+
+  <target name="clean">
+    <delete dir="build"/>
+  </target>
+</project>

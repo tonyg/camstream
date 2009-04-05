@@ -1,0 +1,4 @@
+#!/bin/sh
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`
+export LD_LIBRARY_PATH
+exec java -server -cp $(for d in *.jar; do echo -n "$d":; done) net.lshift.camcapture.v4l.Main "$@"

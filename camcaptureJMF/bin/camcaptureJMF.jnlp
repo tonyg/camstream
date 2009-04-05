@@ -1,0 +1,17 @@
+<jnlp spec="1.0" codebase="@BASEURL@">
+  <information>
+    <title>CamcaptureJMF</title>
+    <vendor>LShift Ltd</vendor>
+    <description>CamcaptureJMF</description>
+  </information>
+  <security>
+    <j2ee-application-client-permissions/>
+  </security>
+  <resources>
+    <j2se href="http://java.sun.com/products/autodl/j2se" version="1.5+"/>
+    <jar href="camcapturejmf.jar"/>
+    <jar href="commons-io-1.2.jar"/>
+    <jar href="rabbitmq-client.jar"/>
+  </resources>
+  <application-desc main-class="net.lshift.camcapture.jmf.Main"/>
+</jnlp>

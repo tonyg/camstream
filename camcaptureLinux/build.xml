@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<project default="build">
+  <property name="build.out" location="build"/>
+  <property name="javah.out" location="${build.out}/javah"/>
+  <property name="lib.out" location="${build.out}/lib"/>
+  <property name="dist.out" location="${build.out}/dist"/>
+  <property name="javac.debug" value="true"/>
+  <property name="javac.source" value="1.5"/>
+  <property name="javac.target" value="1.5"/>
+  <property name="javac.out" location="${build.out}/classes"/>
+
+  <property name="rabbitmq.dist" value="../../AMQ/java/build/dist"/>
+
+  <property name="jdk_home" location="${java.home}/.."/>
+
+  <path id="javac.classpath">
+    <fileset dir="${rabbitmq.dist}">
+      <include name="rabbitmq-client.jar"/>
+      <include name="commons-io-1.2.jar"/>
+    </fileset>
+    <pathelement path="${javah.out}"/>
+  </path>
+
+  <path id="test.classpath">
+    <path refid="javac.classpath"/>
+    <pathelement path="${javac.out}"/>
+  </path>
+
+  <target name="libjv4l" depends="build">
+    <exec dir="native" executable="javah">
+      <arg line="-jni"/>
+      <arg line="-o jv4l.h"/>
+      <arg line="-classpath ${javac.out}"/>
+      <arg line="net.lshift.camcapture.v4l.Driver"/>
+    </exec>
+    <exec dir="native" executable="gcc">
+      <arg line="-o libjv4l.so"/>
+      <arg line="-Wall"/>
+      <arg line="-I${jdk_home}/include"/>
+      <arg line="-I${jdk_home}/include/linux"/>
+      <arg line="-shared"/>
+      <arg line="jv4l.c" />
+    </exec>
+  </target>
+
+  <target name="build">
+    <mkdir dir="${javac.out}"/>
+    <javac destdir="${javac.out}" 
+	   classpathref="javac.classpath"
+	   source="${javac.source}"
+	   target="${javac.target}"
+	   debug="${javac.debug}">
+      <src path="src"/>
+      <src path="../camcapturecommon/src"/>
+    </javac>
+  </target>
+
+  <target name="jar" depends="build">
+    <mkdir dir="${lib.out}"/>
+    <jar destfile="${lib.out}/camcapturelinux.jar" basedir="${javac.out}"/>
+  </target>
+
+  <target name="dist" depends="jar, libjv4l">
+    <mkdir dir="${dist.out}"/>
+    <copy todir="${dist.out}">
+      <fileset dir="${rabbitmq.dist}">
+        <include name="rabbitmq-client.jar"/>
+        <include name="commons-io-1.2.jar"/>
+      </fileset>
+      <fileset dir="${lib.out}">
+	<include name="**/*.jar"/>
+      </fileset>
+      <fileset dir="bin"/>
+      <fileset dir="native">
+	<include name="**/*.so"/>
+      </fileset>
+      <fileset dir="../licenses" includes="*"/> 
+    </copy>
+    <exec dir="${dist.out}" executable="chmod">
+      <arg line="a+x"/>
+      <arg line="camcaptureLinux"/>
+      <arg line="libjv4l.so"/>
+    </exec>
+  </target>
+
+  <target name="sign-dist" depends="dist"/>
+
+  <target name="clean">
+    <delete dir="build"/>
+    <delete file="native/jv4l.h"/>
+    <delete file="native/libjv4l.so"/>
+  </target>
+</project>

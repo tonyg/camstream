@@ -1,0 +1,11 @@
+This is a copy of the LGPL GSM 06.10 codec library included in the
+JDK_1_4_COMPATIBLE tag of Tritonus, from the CVS repository of the
+Tritonus project on Sourceforge. See also http://www.tritonus.org/ and
+http://kbs.cs.tu-berlin.de/~jutta/toast.html.
+
+The reason we have a full copy of the source code here, rather than
+using the precompiled Tritonus plugin jars, is that the "private"
+keyword has once again been used by a library author in a way that I
+need to change.
+
+"private modifiers: Just Say No!"

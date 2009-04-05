@@ -1,0 +1,17 @@
+<jnlp spec="1.0" codebase="@BASEURL@">
+  <information>
+    <title>Camdisplay</title>
+    <vendor>LShift Ltd</vendor>
+    <description>Camdisplay</description>
+  </information>
+  <security>
+    <j2ee-application-client-permissions/>
+  </security>
+  <resources>
+    <j2se href="http://java.sun.com/products/autodl/j2se" version="1.5+"/>
+    <jar href="camdisplay.jar"/>
+    <jar href="commons-io-1.2.jar"/>
+    <jar href="rabbitmq-client.jar"/>
+  </resources>
+  <application-desc main-class="net.lshift.camdisplay.Main"/>
+</jnlp>

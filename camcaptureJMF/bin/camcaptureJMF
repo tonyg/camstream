@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ ! -e "$JMFHOME/lib/jmf.jar" ]
+then
+    echo 'Please set $JMFHOME such that $JMFHOME/lib/jmf.jar exists'
+    exit 1
+fi
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$JMFHOME/lib
+exec java -server -cp $(for d in *.jar; do echo -n "$d":; done)$JMFHOME/lib/jmf.jar net.lshift.camcapture.jmf.Main "$@"

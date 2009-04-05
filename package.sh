@@ -2,23 +2,16 @@
 
 set -e
 
-version=$1
-variant=$2
-type=$3
-keystore=$4
+variant=$1
+keystore=$2
 
-if [ -z "$type" ]
+if [ -z "$variant" ]
 then
-  echo "Usage: package.sh <version> <variant> <dev|stage|live> <optional keystore location>"
+  echo "Usage: package.sh <variant> <optional keystore location>"
   exit 1
 fi
 
-if [ "live" = "${type}" ]
-then
-  base_url="-Dbase.url=http://www.rabbitmq.com/examples/camstream"
-else
-  base_url="-Dbase.url=http://stage.rabbitmq.com/examples/camstream"
-fi
+base_url="-Dbase.url=http://stage.rabbitmq.com/examples/camstream"
 
 if [ -n "${keystore}" ]
 then
@@ -29,16 +22,16 @@ else
   dist_target=dist
 fi
 
-outputdir=packages/camstream/$version
+outputdir=packages/camstream
 mkdir -p $outputdir
 
 function build_package () {
     package=$1
     echo ant ${signing} ${base_url} clean ${dist_target}
     (cd $package && ant ${signing} ${base_url} clean ${dist_target}) && \
-	cp -r $package/build/dist $package-$version && \
-	zip -r $outputdir/$package-$version.zip $package-$version && \
-	rm -rf $package-$version
+	cp -r $package/build/dist $outputdir/$package && \
+	(cd $outputdir; zip -r $package.zip $package) && \
+	rm -rf $outputdir/$package
 }
 
 case "$variant" in
@@ -57,10 +50,3 @@ esac
 
 build_package camcaptureJMF
 build_package camdisplay
-
-sourcepackagename=camstream-source-$version
-sourcepackagedir=$outputdir/$sourcepackagename
-darcs get . $sourcepackagedir && \
-    rm -rf $sourcepackagedir/_darcs && \
-    (cd $outputdir && zip -r $sourcepackagename.zip $sourcepackagename) && \
-    rm -rf $sourcepackagedir

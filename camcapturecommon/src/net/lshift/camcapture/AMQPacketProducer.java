@@ -39,9 +39,6 @@ public class AMQPacketProducer {
         this.routingKey = routingKey;
 
         ConnectionParameters p = new ConnectionParameters();
-        p.setUsername("camstream");
-        p.setPassword("camstream");
-        p.setVirtualHost("/camstream");
         this.conn = new ConnectionFactory(p).newConnection(host);
 
 	this.ch = conn.createChannel();

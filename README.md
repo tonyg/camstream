@@ -17,26 +17,21 @@ In this way, Camstream behaves similarly to a video-enabled
 [IRC](http://en.wikipedia.org/wiki/Internet_Relay_Chat), where an
 exchange models an IRC channel.
 
-## Broker configuration
+## Compiling Camstream
 
-In order to run camstream on your own AMQP broker installation, you
-need to configure the broker to have
+You will need JDK 1.5 or newer, Ant 1.6.5 or newer, and your platform
+libraries for video. For OSX, these are the normal system Java
+extension libraries; for JMF-supported platforms, the JMF must be
+installed and correctly configured; and for Linux, a C compiler is
+required to build the V4L JNI support library included with Camstream.
 
-  - a user `camstream` with password `camstream`,
-  - a virtual host `/camstream`,
-  - a mapping between the user `camstream` and the virtual host `/camstream`,
-    in order to allow that user access to that particular virtual host.
+Once you have all the prerequisites installed, run `ant dist` against
+the `build.xml` files in `camdisplay` and in one of `camcaptureJMF`,
+`camcaptureLinux`, or `camcaptureOSX` depending on your platform.
 
-Follow the instructions in the [admin
-guide](http://www.rabbitmq.com/admin-guide.html) for configuring a
-RabbitMQ broker. Here is transcript of the required commands:
-
-    $ rabbitmqctl add_user camstream camstream
-    Creating user "camstream" ...done.
-    $ rabbitmqctl add_vhost /camstream
-    Creating vhost "/camstream" ...done.
-    $ rabbitmqctl set_permissions -p /camstream camstream ".*" ".*" ".*"
-    Setting permissions for user "camstream" in vhost "/camstream" ...done.
+Build results, including copies of the driver scripts referred to
+below, are placed in a `build/dist` directory relative to each
+`build.xml` file.
 
 ## Running Camstream
 

@@ -96,9 +96,6 @@ public class Main {
         textInput.requestFocusInWindow();
 
         ConnectionParameters p = new ConnectionParameters();
-        p.setUsername("camstream");
-        p.setPassword("camstream");
-        p.setVirtualHost("/camstream");
         p.setRequestedHeartbeat(0);
         conn = new ConnectionFactory(p).newConnection(host);
 

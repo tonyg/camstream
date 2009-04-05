@@ -80,7 +80,6 @@ public class Main {
 
     public Connection conn;
     public Channel ch;
-    public int ticket;
 
     public Main(String host, String exch, String nickname)
 	throws IOException
@@ -104,13 +103,12 @@ public class Main {
         conn = new ConnectionFactory(p).newConnection(host);
 
 	ch = conn.createChannel();
-	ticket = ch.accessRequest("/data");
 
-	ch.exchangeDeclare(ticket, exch, "fanout");
+	ch.exchangeDeclare(exch, "fanout");
 
-	String queueName = ch.queueDeclare(ticket).getQueue();
-	ch.queueBind(ticket, queueName, exch, "");
-	ch.basicConsume(ticket, queueName, true,
+	String queueName = ch.queueDeclare().getQueue();
+	ch.queueBind(queueName, exch, "");
+	ch.basicConsume(queueName, true,
 			new DefaultConsumer(ch) {
                             public void handleShutdownSignal(String consumerTag, ShutdownSignalException s) {
                                 if (s.getReason() instanceof java.io.EOFException) {
@@ -189,7 +187,7 @@ public class Main {
                     String message = textInput.getText();
                     textInput.setText("");
                     try {
-                        ch.basicPublish(ticket, exchangeName, nickname,
+                        ch.basicPublish(exchangeName, nickname,
                                         MessageProperties.TEXT_PLAIN,
                                         message.getBytes());
                     } catch (IOException ioe) {

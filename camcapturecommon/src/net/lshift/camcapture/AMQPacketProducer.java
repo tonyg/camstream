@@ -19,7 +19,6 @@ public class AMQPacketProducer {
 
     public Connection conn;
     public Channel ch;
-    public int ticket;
 
     public long frameCount;
     public long byteCount;
@@ -46,9 +45,8 @@ public class AMQPacketProducer {
         this.conn = new ConnectionFactory(p).newConnection(host);
 
 	this.ch = conn.createChannel();
-	this.ticket = ch.accessRequest("/data");
 
-	ch.exchangeDeclare(ticket, exchange, "fanout");
+	ch.exchangeDeclare(exchange, "fanout");
     }
 
     public void resetStatistics() {
@@ -62,7 +60,7 @@ public class AMQPacketProducer {
     {
 	this.byteCount += packet.length;
 	this.frameCount++;
-	ch.basicPublish(this.ticket, this.exchange, routingKey, prop, packet);
+	ch.basicPublish(this.exchange, routingKey, prop, packet);
     }
 
     public void reportStatistics(String label) {

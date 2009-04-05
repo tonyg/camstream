@@ -8,9 +8,10 @@ The RabbitMQ Java client library is dual-licensed under the MPL and the
 GPL v2. For the MPL, please see LICENSE-MPL-RabbitMQ. For the GPL 
 v2, please see LICENSE-GPL2.
 
-The RabbitMQ Java client library includes software from the Apache 
-Foundation. This is licensed under the Apache Licence v2. For this 
-license, please see LICENSE-APACHE2.
+The RabbitMQ Java client library includes software under the Apache
+Licence v2. For this license, please see LICENSE-APACHE2. For
+attribution of copyright and other details of provenance, please refer
+to the source code.
 
 The package net.lshift.camcapture.gsm is licensed under the GPL v2. For 
 the GPL v2, please see LICENSE-GPL2.

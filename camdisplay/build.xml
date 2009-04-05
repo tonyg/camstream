@@ -8,11 +8,11 @@
   <property name="javac.target" value="1.5"/>
   <property name="javac.out" location="${build.out}/classes"/>
 
-  <property name="rabbitmq.dist" value="../../AMQ/java/build/dist"/>
+  <property name="rabbitmq.dist" value="../camcapturecommon/lib"/>
 
   <path id="javac.classpath">
     <fileset dir="${rabbitmq.dist}">
-      <include name="rabbitmq-client.jar"/>
+      <include name="rabbitmq-client-1.5.3.jar"/>
       <include name="commons-io-1.2.jar"/>
     </fileset>
   </path>
@@ -46,7 +46,7 @@
     <mkdir dir="${dist.out}"/>
     <copy todir="${dist.out}">
       <fileset dir="${rabbitmq.dist}">
-        <include name="rabbitmq-client.jar"/>
+        <include name="rabbitmq-client-1.5.3.jar"/>
         <include name="commons-io-1.2.jar"/>
       </fileset>
       <fileset dir="${lib.out}">

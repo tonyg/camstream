@@ -35,8 +35,8 @@ RabbitMQ broker. Here is transcript of the required commands:
     Creating user "camstream" ...done.
     $ rabbitmqctl add_vhost /camstream
     Creating vhost "/camstream" ...done.
-    $ rabbitmqctl map_user_vhost camstream /camstream
-    Mapping user "camstream" to vhost "/camstream" ...done.
+    $ rabbitmqctl set_permissions -p /camstream camstream ".*" ".*" ".*"
+    Setting permissions for user "camstream" in vhost "/camstream" ...done.
 
 ## Running Camstream
 

@@ -36,6 +36,7 @@
     <exec dir="native" executable="gcc">
       <arg line="-o libjv4l.so"/>
       <arg line="-Wall"/>
+      <arg line="-fPIC"/>
       <arg line="-I${jdk_home}/include"/>
       <arg line="-I${jdk_home}/include/linux"/>
       <arg line="-shared"/>

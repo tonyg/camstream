@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 
+import java.util.zip.GZIPOutputStream;
+
 import java.awt.image.BufferedImage;
 
 import javax.imageio.IIOImage;
@@ -25,7 +27,7 @@ public class AMQVideoSender extends AMQPacketProducer {
     public void sendFrames(int targetFrameRate, java.util.Iterator frameProducer)
         throws IOException
     {
-        final int protocolVersion = 2;
+        final int protocolVersion = 3;
         
         if (targetFrameRate == 0) {
             targetFrameRate = 5;
@@ -76,17 +78,23 @@ public class AMQVideoSender extends AMQPacketProducer {
                 frameKind = 'I';
             } else {
                 subtractImages(nextImage, decoder.getCurrentImage(), image);
-                compressionQuality = 0.3F;
+		/* compressionQuality used to be set to 0.3 here, but
+		 * because we're now (as of protocol version 3)
+		 * gzipping, we can afford to step up to 0.4. */
+                compressionQuality = 0.4F;
                 frameKind = 'P';
             }
 
 	    ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-	    DataOutputStream s = new DataOutputStream(byteStream);
-	    s.write(protocolVersion);
+	    byteStream.write(protocolVersion);
+	    GZIPOutputStream gz = new GZIPOutputStream(byteStream);
+	    DataOutputStream s = new DataOutputStream(gz);
 	    s.writeLong(frameProductionTime);
             s.write((int) frameKind);
             writeCompressed(image, compressionQuality, s);
 	    s.flush();
+	    gz.finish();
+	    gz.flush();
 	    byteStream.flush();
             byte[] compressedFrame = byteStream.toByteArray();
 

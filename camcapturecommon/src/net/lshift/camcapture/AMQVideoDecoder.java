@@ -7,6 +7,8 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import java.util.zip.GZIPInputStream;
+
 import javax.imageio.ImageIO;
 
 public class AMQVideoDecoder {
@@ -29,26 +31,43 @@ public class AMQVideoDecoder {
     public boolean handleFrame(byte[] frameData)
     {
         try {
-            DataInputStream s = new DataInputStream(new ByteArrayInputStream(frameData));
-	    int protocolVersion = s.read();
+	    if (frameData.length == 0) {
+		return false;
+	    }
+
+	    int protocolVersion = frameData[0];
+	    ByteArrayInputStream frameDataStream = new ByteArrayInputStream(frameData,
+									    1,
+									    frameData.length - 1);
+
+            DataInputStream s;
             char frameKind;
 
             if ((protocolVersion == (int) 'I') ||
                 (protocolVersion == (int) 'P')) {
                 /* Old protocol, without version numbering! */
+		s = new DataInputStream(frameDataStream);
                 frameProductionTime = 0;
                 frameKind = (char) protocolVersion;
             } else {
-                if (protocolVersion > 2) {
-                    return false;
-                } else {
-                    /* Protocol versions 1 and 2 use the same frame
-                     * format, and differ in how the P frames are
-                     * encoded. */
-                    frameProductionTime = s.readLong();
-                    frameKind = (char) s.read();
-                }
-            }
+		/* Protocol versions 1 and 2 use the same frame
+		 * format, and differ in how the P frames are
+		 * encoded. Protocol version 3 uses gzip compression
+		 * of each frame. */
+		switch (protocolVersion) {
+		  case 3:
+		      s = new DataInputStream(new GZIPInputStream(frameDataStream));
+		      break;
+		  case 2:
+		  case 1:
+		      s = new DataInputStream(frameDataStream);
+		      break;
+		  default:
+		      return false; // although it'd be pretty odd if we reach here.
+		}
+		frameProductionTime = s.readLong();
+		frameKind = (char) s.read();
+	    }
 
             switch (frameKind) {
               case 'I':
@@ -70,6 +89,7 @@ public class AMQVideoDecoder {
                                         deltaImage.getHeight(),
                                         BufferedImage.TYPE_INT_RGB);
                   switch (protocolVersion) {
+		    case 3:
                     case 2:
                         combineDeltaV2(currentImage, deltaImage, newImage);
                         break;

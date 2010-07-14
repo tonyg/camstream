@@ -28,10 +28,13 @@ public class AMQVideoSender extends AMQPacketProducer {
         throws IOException
     {
         final int protocolVersion = 3;
+        final int keyframePeriod = 3; // seconds
         
         if (targetFrameRate == 0) {
             targetFrameRate = 5;
         }
+
+        int keyFrameEvery = targetFrameRate * keyframePeriod; // frames
 
 	BasicProperties prop =
 	    new BasicProperties(AMQVideo.MIME_TYPE, null, null, new Integer(1),
@@ -72,7 +75,7 @@ public class AMQVideoSender extends AMQPacketProducer {
             float compressionQuality;
             char frameKind;
 
-            if ((frameCount % 15) == 0) {
+            if ((frameCount % keyFrameEvery) == 0) {
                 copyImage(nextImage, image);
                 compressionQuality = 0.4F;
                 frameKind = 'I';

@@ -40,16 +40,18 @@ import net.lshift.camcapture.SwingUtil;
 public class Main {
     public static void main(String args[]) {
 	try {
-	    if (args.length < 2) {
-		System.err.println("Usage: camdisplay <hostname> <exchangename> <nickname>");
+	    if (args.length < 4) {
+		System.err.println("Usage: camdisplay <hostname> <exchangename> <nickname> <mixerSpec>");
                 ArgumentDialog d = new ArgumentDialog(new String[] {
                     "Host Name",
                     "Channel Name",
-                    "Nickname"
+                    "Nickname",
+                    "Audio Output Device"
                 }, new String[] {
                     "dev.rabbitmq.com",
                     "lfish",
-                    "CHANGEME"
+                    "CHANGEME",
+                    "Audio"
                 });
                 d.show();
                 args = d.getOptionValues();
@@ -61,7 +63,8 @@ public class Main {
 	    String host = args[0];
 	    String exch = args[1];
             String nickname = args[2];
-	    new Main(host, exch, nickname);
+            String mixerSpec = args[3];
+	    new Main(host, exch, nickname, mixerSpec);
 	} catch (Exception e) {
             SwingUtil.complainFatal("Error", null, e);
 	}
@@ -77,7 +80,7 @@ public class Main {
     public Connection conn;
     public Channel ch;
 
-    public Main(String host, String exch, String nickname)
+    public Main(String host, String exch, String nickname, final String mixerSpec)
 	throws IOException
     {
 	frame = new JFrame("RabbitCam: " + host + "/" + exch);
@@ -132,7 +135,7 @@ public class Main {
 
                                 CamstreamComponent comp;
                                 if (!componentMap.containsKey(routingKey)) {
-                                    comp = new CamstreamComponent();
+                                    comp = new CamstreamComponent(mixerSpec);
                                     addComponent(routingKey, comp);
                                     frame.pack();
                                 } else {

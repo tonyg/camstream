@@ -1,28 +1,35 @@
 package net.lshift.camdisplay;
 
-import java.awt.Graphics;
-import java.awt.Dimension;
-import java.awt.image.BufferedImage;
-
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import javax.sound.sampled.LineUnavailableException;
-
+import net.lshift.camcapture.AMQAudio;
+import net.lshift.camcapture.AMQAudioDecoder;
 import net.lshift.camcapture.AMQVideo;
 import net.lshift.camcapture.AMQVideoDecoder;
 
 public class CamstreamComponent extends JComponent {
     public AMQVideoDecoder vDecoder;
+    public AMQAudioDecoder aDecoder;
 
     public long videoFrames = 0;
+    public long audioFrames = 0;
     public long otherFrames = 0;
     public JLabel statusLabel = null;
 
-    public CamstreamComponent() {
+    public CamstreamComponent(String audioMixerSpec) {
 	vDecoder = new AMQVideoDecoder();
+        try {
+            aDecoder = new AMQAudioDecoder(audioMixerSpec);
+        } catch (LineUnavailableException lue) {
+            aDecoder = null;
+        }
     }
 
     public void setStatusLabel(JLabel l) {
@@ -39,6 +46,12 @@ public class CamstreamComponent extends JComponent {
             if (vDecoder.handleFrame(body)) {
                 return blitImage();
             }
+        } else if (AMQAudio.MIME_TYPE.equals(contentType)) {
+            audioFrames++;
+            updateStatusLabel();
+            if (aDecoder != null) {
+                aDecoder.handleFrame(body);
+            }
         } else {
 	    otherFrames++;
 	    updateStatusLabel();
@@ -48,7 +61,10 @@ public class CamstreamComponent extends JComponent {
 
     public void updateStatusLabel() {
 	if (statusLabel != null) {
-	    statusLabel.setText("V" + videoFrames + "/?" + otherFrames);
+	    statusLabel.setText(
+                    "V" + videoFrames +
+                    "/A" + audioFrames +
+                    "/?" + otherFrames);
 	}
     }
 

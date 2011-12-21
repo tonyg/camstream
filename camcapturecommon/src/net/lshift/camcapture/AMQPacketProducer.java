@@ -1,16 +1,12 @@
 package net.lshift.camcapture;
 
-import java.io.IOException;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-
-import java.text.NumberFormat;
-
 import com.rabbitmq.client.AMQP.BasicProperties;
+import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.ConnectionParameters;
-import com.rabbitmq.client.Channel;
+
+import java.io.IOException;
+import java.text.NumberFormat;
 
 public class AMQPacketProducer {
     public String host;
@@ -38,8 +34,9 @@ public class AMQPacketProducer {
         this.exchange = exchange;
         this.routingKey = routingKey;
 
-        ConnectionParameters p = new ConnectionParameters();
-        this.conn = new ConnectionFactory(p).newConnection(host);
+        ConnectionFactory cf = new ConnectionFactory();
+        cf.setHost(host);
+        this.conn = cf.newConnection();
 
 	this.ch = conn.createChannel();
 

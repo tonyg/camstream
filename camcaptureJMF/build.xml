@@ -14,7 +14,7 @@
 
   <path id="javac.classpath">
     <fileset dir="${rabbitmq.dist}">
-      <include name="rabbitmq-client-1.5.3.jar"/>
+      <include name="rabbitmq-client-2.7.1.jar"/>
       <include name="commons-io-1.2.jar"/>
     </fileset>
     <fileset dir="lib">
@@ -48,7 +48,7 @@
     <mkdir dir="${dist.out}"/>
     <copy todir="${dist.out}">
       <fileset dir="${rabbitmq.dist}">
-        <include name="rabbitmq-client-1.5.3.jar"/>
+        <include name="rabbitmq-client-2.7.1.jar"/>
         <include name="commons-io-1.2.jar"/>
       </fileset>
       <fileset dir="${lib.out}">

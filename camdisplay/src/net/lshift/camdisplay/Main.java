@@ -4,40 +4,36 @@ package net.lshift.camdisplay;
 // LiveCam.java by Jochen Broz on 19.02.05,
 // http://lists.apple.com/archives/quicktime-java/2005/Feb/msg00062.html
 
-import java.util.Map;
-import java.util.HashMap;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.border.TitledBorder;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.border.TitledBorder;
-
+import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.ConnectionParameters;
-import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.MessageProperties;
 import com.rabbitmq.client.ShutdownSignalException;
-
 import net.lshift.camcapture.ArgumentDialog;
 import net.lshift.camcapture.SwingUtil;
 
@@ -95,9 +91,10 @@ public class Main {
 
         textInput.requestFocusInWindow();
 
-        ConnectionParameters p = new ConnectionParameters();
-        p.setRequestedHeartbeat(0);
-        conn = new ConnectionFactory(p).newConnection(host);
+        ConnectionFactory cf = new ConnectionFactory();
+        cf.setHost(host);
+        cf.setRequestedHeartbeat(0);
+        conn = cf.newConnection();
 
 	ch = conn.createChannel();
 
@@ -126,7 +123,7 @@ public class Main {
 				throws IOException
 			    {
                                 String routingKey = envelope.getRoutingKey();
-                                String contentType = properties.contentType;
+                                String contentType = properties.getContentType();
 
                                 if (contentType.equals("text/plain")) {
                                     handleText(routingKey, new String(body));

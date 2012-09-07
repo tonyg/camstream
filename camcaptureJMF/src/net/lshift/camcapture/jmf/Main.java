@@ -50,7 +50,8 @@ public class Main extends CaptureBase {
     public RGBFormat selectedFormat = null;
 
     public java.util.Iterator buildFrameIterator(int desiredWidth,
-                                                 int desiredHeight)
+                                                 int desiredHeight,
+						 int targetFrameRate)
         throws Exception
     {
         selectDeviceAndFormat(desiredWidth, desiredHeight);

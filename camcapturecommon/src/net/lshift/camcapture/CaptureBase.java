@@ -49,7 +49,9 @@ public abstract class CaptureBase {
             stageMessage = "connecting to broker";
             AMQVideoSender sender = new AMQVideoSender(host, exch, routingKey);
             stageMessage = "initialising video capture system";
-            java.util.Iterator frameIterator = buildFrameIterator(desiredWidth, desiredHeight);
+            java.util.Iterator frameIterator = buildFrameIterator(desiredWidth,
+								  desiredHeight,
+								  targetFrameRate);
             stageMessage = "during video capture";
             sender.sendFrames(targetFrameRate, frameIterator);
         } catch (Exception e) {
@@ -75,6 +77,8 @@ public abstract class CaptureBase {
         f.show();
     }
 
-    public abstract java.util.Iterator buildFrameIterator(int desiredWidth, int desiredHeight)
+    public abstract java.util.Iterator buildFrameIterator(int desiredWidth,
+							  int desiredHeight,
+							  int targetFrameRate)
         throws Exception;
 }

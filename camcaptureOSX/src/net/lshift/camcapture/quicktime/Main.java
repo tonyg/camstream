@@ -52,7 +52,8 @@ public class Main extends CaptureBase {
     public BufferedImage image;
 
     public java.util.Iterator buildFrameIterator(int desiredWidth,
-                                                 int desiredHeight)
+                                                 int desiredHeight,
+						 int targetFrameRate)
         throws Exception
     {
 	grabber = new SequenceGrabber();

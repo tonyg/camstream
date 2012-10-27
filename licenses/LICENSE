@@ -1,8 +1,7 @@
 This package contains code distributed under a variety of licenses.
 
-Camstream code is dual-licensed under the MPL and the GPL v2. For the 
-MPL, please see LICENSE-MPL-Camstream. For the GPL v2, please see 
-LICENSE-GPL2.
+Camstream code is licensed under the GPL v2, the details of which can
+be found in the file LICENSE-GPL2.
 
 The RabbitMQ Java client library is dual-licensed under the MPL and the 
 GPL v2. For the MPL, please see LICENSE-MPL-RabbitMQ. For the GPL 
@@ -12,9 +11,6 @@ The RabbitMQ Java client library includes software under the Apache
 Licence v2. For this license, please see LICENSE-APACHE2. For
 attribution of copyright and other details of provenance, please refer
 to the source code.
-
-The package net.lshift.camcapture.gsm is licensed under the GPL v2. For 
-the GPL v2, please see LICENSE-GPL2.
 
 Camstream incorporates techniques and some code from LiveCam.java by 
 Jochen Broz on 19.02.05:
